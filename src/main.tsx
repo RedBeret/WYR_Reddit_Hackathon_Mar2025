@@ -16,9 +16,11 @@ Devvit.addCustomPostType({
   name: 'Would You Rather',
   render: (context) => {
     const { postId, kvStore } = context;
-    const [question] = useState(() =>
-      questions[Math.floor(Math.random() * questions.length)]
-    );
+    // Calculate question based on current hour (rotates every hour)
+    const currentHour = new Date().getHours();
+    const question = questions[currentHour % questions.length];
+    
+    // Each user is allowed one vote per post in this test implementation.
     const [selectedOption, setSelectedOption] = useState<'A' | 'B' | null>(null);
     const [votes, setVotes] = useState({ A: 0, B: 0 });
 
@@ -53,8 +55,7 @@ Devvit.addCustomPostType({
         {selectedOption ? (
           <vstack alignment="center middle" gap="small">
             <text>
-              You chose:{" "}
-              {selectedOption === "A" ? question.optionA : question.optionB}
+              You chose: {selectedOption === "A" ? question.optionA : question.optionB}
             </text>
             <text>
               {question.optionA} has {votes.A} vote(s)
