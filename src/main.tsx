@@ -1,5 +1,7 @@
 import { Devvit, useState, JSONValue } from '@devvit/public-api';
 
+Devvit.configure({ kvStore: true });
+
 type VoteData = {
   votes: { A: number; B: number };
   userVotes: Record<string, JSONValue>;
@@ -16,33 +18,37 @@ Devvit.addCustomPostType({
   name: 'Would You Rather',
   render: (context) => {
     const { postId, kvStore } = context;
-    // Calculate question based on current hour (rotates every hour)
     const currentHour = new Date().getHours();
     const question = questions[currentHour % questions.length];
-    
-    // Each user is allowed one vote per post in this test implementation.
+    const kvKey = `${postId}-${currentHour}`;
+
     const [selectedOption, setSelectedOption] = useState<'A' | 'B' | null>(null);
     const [votes, setVotes] = useState({ A: 0, B: 0 });
-
+    const [fetched, setFetched] = useState(false);
     const fetchVotes = async (): Promise<VoteData> => {
-      const stored = await kvStore.get(postId!);
+      const stored = await kvStore.get(kvKey);
       if (stored && typeof stored === 'object' && 'votes' in stored) {
         return stored as VoteData;
       }
       return { votes: { A: 0, B: 0 }, userVotes: {} };
     };
 
-    const handleVote = (option: 'A' | 'B') => {
+    if (!fetched) {
+      fetchVotes().then((data) => {
+        setVotes(data.votes);
+        setFetched(true);
+      });
+    }
+
+    // Function to handle voting
+    const handleVote = async (option: 'A' | 'B') => {
       if (selectedOption === null) {
         setSelectedOption(option);
-        setVotes((prev) => {
-          const newVotes = { ...prev, [option]: prev[option] + 1 };
-          fetchVotes().then((postData) => {
-            postData.votes[option] = newVotes[option];
-            kvStore.put(postId!, postData as JSONValue);
-          });
-          return newVotes;
-        });
+        const newVotes = { ...votes, [option]: votes[option] + 1 };
+        setVotes(newVotes);
+        const data = await fetchVotes();
+        data.votes[option] = newVotes[option];
+        await kvStore.put(kvKey, data as JSONValue);
       }
     };
 
@@ -55,7 +61,7 @@ Devvit.addCustomPostType({
         {selectedOption ? (
           <vstack alignment="center middle" gap="small">
             <text>
-              You chose: {selectedOption === "A" ? question.optionA : question.optionB}
+              You chose: {selectedOption === 'A' ? question.optionA : question.optionB}
             </text>
             <text>
               {question.optionA} has {votes.A} vote(s)
@@ -67,10 +73,10 @@ Devvit.addCustomPostType({
           </vstack>
         ) : (
           <vstack gap="medium" alignment="center middle">
-            <button appearance="primary" onPress={() => handleVote("A")}>
+            <button appearance="primary" onPress={() => handleVote('A')}>
               {question.optionA}
             </button>
-            <button appearance="primary" onPress={() => handleVote("B")}>
+            <button appearance="primary" onPress={() => handleVote('B')}>
               {question.optionB}
             </button>
             <text size="small">Can't decide? Toss a coin! 🪙</text>
