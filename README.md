@@ -1,39 +1,36 @@
 # Would You Rather Game
 
-An interactive "Would You Rather" game built with Devvit, allowing Reddit users to engage in fun and dynamic polls within their communities.
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
+An interactive "Would You Rather" game built with Devvit for the Hack Reddit hackathon in March 2025. This project lets Reddit users participate in fun and dynamic polls within their communities.
 
 ## Overview
 
-This application presents users with two options in a "Would You Rather" format, encouraging participation and discussion within Reddit communities. Built with Devvit, it integrates seamlessly with Reddit's platform to enhance user engagement.
+This application presents two options in a "Would You Rather" format, encouraging discussion and participation within Reddit communities. The game rotates its question every hour, ensuring fresh content throughout the month.
 
 ## Features
 
-- **Hourly Question Rotation:** Displays a new question every hour, rotating through a predefined set of questions.
-- **User Voting:** Users can vote on their preferred option with results updated in real time.
-- **Persistent Voting:** Each user's vote is recorded to ensure that votes are not lost between sessions (each user can vote only once per post in this demo).
+- **Daily Question Rotation:** Displays a new question every day from a predefined list.
+- **User Voting:** Users can vote on their preferred option and see real-time results.
+- **Persistent Voting:** Each user is allowed one vote per post (in this demo, votes do not accumulate across users).
 
 ## Installation
 
-1. **Clone the Repository:**
+1. Clone the repository:
 
    ```bash
    git clone git@github.com:RedBeret/WYR_Reddit_Hackathon_Mar2025.git
-Navigate to the Project Directory:
+   ```
 
-bash
-Copy
-cd WYR_Reddit_Hackathon_Mar2025
-Install Dependencies:
+2. Navigate to the project directory:
 
-bash
-Copy
-npm install
-Set Up Devvit:
+   ```bash
+   cd WYR_Reddit_Hackathon_Mar2025
+   ```
 
-Ensure you have Devvit installed and configured. For more information, please refer to the Devvit Quickstart Guide.
+3. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+4. Set up Devvit by following the [Devvit Quickstart Guide](https://developers.reddit.com/docs/next/quickstart).
+
