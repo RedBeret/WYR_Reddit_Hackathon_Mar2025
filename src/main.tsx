@@ -17,14 +17,24 @@ const questions = [
 Devvit.addCustomPostType({
   name: 'Would You Rather',
   render: (context) => {
-    const { postId, kvStore } = context;
-    const currentHour = new Date().getHours();
-    const question = questions[currentHour % questions.length];
-    const kvKey = `${postId}-${currentHour}`;
+    const { postId, kvStore, userId = 'anonymous' } = context;
+    const now = new Date();
+    const fiveMinIndex = Math.floor(now.getMinutes() / 5);
+    const question = questions[fiveMinIndex % questions.length];
+    const kvKey = `${postId}-${now.getHours()}-${fiveMinIndex}`;
 
     const [selectedOption, setSelectedOption] = useState<'A' | 'B' | null>(null);
     const [votes, setVotes] = useState({ A: 0, B: 0 });
     const [fetched, setFetched] = useState(false);
+    const [lastKey, setLastKey] = useState('');
+
+    if (lastKey !== kvKey) {
+      setLastKey(kvKey);
+      setSelectedOption(null);
+      setVotes({ A: 0, B: 0 });
+      setFetched(false);
+    }
+
     const fetchVotes = async (): Promise<VoteData> => {
       const stored = await kvStore.get(kvKey);
       if (stored && typeof stored === 'object' && 'votes' in stored) {
@@ -44,11 +54,14 @@ Devvit.addCustomPostType({
     const handleVote = async (option: 'A' | 'B') => {
       if (selectedOption === null) {
         setSelectedOption(option);
-        const newVotes = { ...votes, [option]: votes[option] + 1 };
-        setVotes(newVotes);
         const data = await fetchVotes();
-        data.votes[option] = newVotes[option];
-        await kvStore.put(kvKey, data as JSONValue);
+        if (!data.userVotes[userId]) {
+          data.votes[option]++;
+          data.userVotes[userId] = option;
+          await kvStore.put(kvKey, data as JSONValue);
+        }
+        const updated = await fetchVotes();
+        setVotes(updated.votes);
       }
     };
 
