@@ -19,10 +19,9 @@ Devvit.addCustomPostType({
   render: (context) => {
     const { postId, kvStore, userId = 'anonymous' } = context;
     const now = new Date();
-    const fiveMinIndex = Math.floor(now.getMinutes() / 5);
-    const question = questions[fiveMinIndex % questions.length];
-    const kvKey = `${postId}-${now.getHours()}-${fiveMinIndex}`;
-
+    const dayIndex = now.getDate();
+    const question = questions[dayIndex % questions.length]; 
+    const kvKey = `${postId}-${now.getFullYear()}-${now.getMonth()}-${dayIndex}`; 
     const [selectedOption, setSelectedOption] = useState<'A' | 'B' | null>(null);
     const [votes, setVotes] = useState({ A: 0, B: 0 });
     const [fetched, setFetched] = useState(false);
@@ -51,7 +50,6 @@ Devvit.addCustomPostType({
       });
     }
 
-    // Function to handle voting
     const handleVote = async (option: 'A' | 'B') => {
       if (selectedOption === null) {
         setSelectedOption(option);
