@@ -1,6 +1,5 @@
 import { Devvit, useState, JSONValue } from '@devvit/public-api';
-import questions from './questions.json';
-
+import questionsData from './questions.json'; 
 Devvit.configure({ kvStore: true });
 
 type VoteData = {
@@ -13,7 +12,7 @@ type StoredChoice = {
   label: string;
 };
 
-const SUGGESTIONS_KEY = 'communitySuggestions';
+const questions = questionsData;
 
 Devvit.addCustomPostType({
   name: 'Would You Rather',
@@ -29,7 +28,6 @@ Devvit.addCustomPostType({
     const [fetched, setFetched] = useState(false);
     const [lastKey, setLastKey] = useState('');
     const [previousChoice, setPreviousChoice] = useState<string | null>(null);
-    const [suggestion, setSuggestion] = useState('');
 
     if (lastKey !== kvKey) {
       setLastKey(kvKey);
@@ -84,18 +82,21 @@ Devvit.addCustomPostType({
       }
     };
 
-    // Save suggestions in KV
-    const handleSuggestionSubmit = async () => {
-      if (suggestion.trim()) {
-        const existing = await kvStore.get(SUGGESTIONS_KEY) as string[] | undefined;
-        const updated = existing ? [...existing, suggestion] : [suggestion];
-        await kvStore.put(SUGGESTIONS_KEY, updated as JSONValue);
-        setSuggestion('');
-      }
-    };
-
     return (
       <vstack alignment="center middle" padding="large" gap="large">
+        <text size="xxlarge" weight="bold">🎉 Would You Rather? 🎉</text>
+        <text size="large">
+          {question.optionA} vs {question.optionB}
+        </text>
+        {selectedOption ? (
+          <vstack alignment="center middle" gap="small">
+            <text>
+              You chose: {selectedOption === 'A' ? question.optionA : question.optionB}
+            </text>
+            <text>
+              {question.optionA} has {votes.A} vote(s)
+            </text>
+            <text>
               {question.optionB} has {votes.B} vote(s)
             </text>
             <text>💬 What would you do first? Share in the comments!</text>
