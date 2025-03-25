@@ -1,6 +1,62 @@
 [
-  {"optionA": "Fly", "optionB": "Be Invisible"},
-  {"optionA": "Speak all languages", "optionB": "Speak to animals"},
-  {"optionA": "Live underwater", "optionB": "Live in space"},
-  {"optionA": "Unlimited pizza", "optionB": "Unlimited ice cream"}
+  {
+    "optionA": "✈️ Fly",
+    "optionB": "🫥 Be Invisible"
+  },
+  {
+    "optionA": "🗣️ Speak All Languages",
+    "optionB": "🐾 Speak to Animals"
+  },
+  {
+    "optionA": "🌊 Live Underwater",
+    "optionB": "🚀 Live in Space"
+  },
+  {
+    "optionA": "🍕 Unlimited Pizza",
+    "optionB": "🍦 Unlimited Ice Cream"
+  },
+  {
+    "optionA": "🧙‍♂️ Master Every Spell in the World",
+    "optionB": "🤖 Have a Cyborg Body with Super Strength"
+  },
+  {
+    "optionA": "💧 Breathe Underwater Forever",
+    "optionB": "🔥 Control Fire at Will"
+  },
+  {
+    "optionA": "💼 Land Your Dream Job Instantly",
+    "optionB": "🌍 Travel the Entire World for Free"
+  },
+  {
+    "optionA": "🎸 Be a World-Famous Musician",
+    "optionB": "🎬 Be a Renowned Actor"
+  },
+  {
+    "optionA": "📚 Have Infinite Knowledge",
+    "optionB": "💰 Have Unlimited Wealth"
+  },
+  {
+    "optionA": "🏠 Live in Your Dream Home but Never Travel",
+    "optionB": "✈️ Travel Anywhere but Never Settle"
+  },
+  {
+    "optionA": "🕰️ Time Travel to the Past",
+    "optionB": "🔮 See Into the Future"
+  },
+  {
+    "optionA": "🎨 Be a Master Artist",
+    "optionB": "🖋️ Be a Bestselling Author"
+  },
+  {
+    "optionA": "🚶 Walk Through Walls",
+    "optionB": "🛡️ Be Invulnerable to Harm"
+  },
+  {
+    "optionA": "🦸‍♂️ Have Super Speed",
+    "optionB": "🧠 Have Telekinetic Powers"
+  },
+  {
+    "optionA": "🌟 Be Famous but Always in the Spotlight",
+    "optionB": "🕶️ Live a Quiet, Peaceful Life"
+  }
 ]
