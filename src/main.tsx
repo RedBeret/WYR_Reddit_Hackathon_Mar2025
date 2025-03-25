@@ -7,6 +7,11 @@ type VoteData = {
   userVotes: Record<string, JSONValue>;
 };
 
+type StoredChoice = {
+  option: 'A' | 'B';
+  label: string;
+};
+
 const questions = [
   { optionA: '🚗 Flying Car', optionB: '🤖 Personal Robot' },
   { optionA: '🌌 Travel to Space', optionB: '🌊 Live Underwater' },
@@ -27,6 +32,7 @@ Devvit.addCustomPostType({
     const [votes, setVotes] = useState({ A: 0, B: 0 });
     const [fetched, setFetched] = useState(false);
     const [lastKey, setLastKey] = useState('');
+    const [previousChoice, setPreviousChoice] = useState<string | null>(null);
 
     if (lastKey !== kvKey) {
       setLastKey(kvKey);
@@ -55,11 +61,27 @@ Devvit.addCustomPostType({
       if (selectedOption === null) {
         setSelectedOption(option);
         const data = await fetchVotes();
-        if (!data.userVotes[userId]) {
+        const existingChoice = data.userVotes[userId] as StoredChoice | undefined;
+        if (existingChoice) {
+          if (existingChoice.option !== option) {
+            data.votes[existingChoice.option]--;
+            data.votes[option]++;
+            data.userVotes[userId] = {
+              option,
+              label: question[option === 'A' ? 'optionA' : 'optionB'],
+            };
+            setPreviousChoice(existingChoice.label);
+          } else {
+            setPreviousChoice(existingChoice.label);
+          }
+        } else {
           data.votes[option]++;
-          data.userVotes[userId] = option;
-          await kvStore.put(kvKey, data as JSONValue);
+          data.userVotes[userId] = {
+            option,
+            label: question[option === 'A' ? 'optionA' : 'optionB'],
+          };
         }
+        await kvStore.put(kvKey, data as JSONValue);
         const updated = await fetchVotes();
         setVotes(updated.votes);
       }
@@ -83,6 +105,9 @@ Devvit.addCustomPostType({
               {question.optionB} has {votes.B} vote(s)
             </text>
             <text>💬 What would you do first? Share in the comments!</text>
+            {previousChoice && (
+              <text>You previously chose: {previousChoice}</text>
+            )}
           </vstack>
         ) : (
           <vstack gap="medium" alignment="center middle">
